@@ -7,4 +7,8 @@ server.get("/", (_, response) => {
     response.sendFile(`${root_path}/pages/home.html`);
 });
 
+server.get("/song", (_, response) => {
+    response.sendFile(`${root_path}/pages/song.html`);
+});
+
 module.exports = server;

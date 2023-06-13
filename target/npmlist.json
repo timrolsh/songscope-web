@@ -1,0 +1,1 @@
+{"name":"songscope-web","dependencies":{"cookie-parser":{"version":"1.4.6"},"dotenv":{"version":"16.1.4"},"express":{"version":"4.18.2"},"google-auth-library":{"version":"8.8.0"},"morgan":{"version":"1.10.0"},"pg":{"version":"8.11.0"}}}
