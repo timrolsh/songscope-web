@@ -1,15 +1,12 @@
 /* this font is */
-@import url('https://fonts.googleapis.com/css2?family=Kablammo&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Kablammo&display=swap");
 /* to use the font use font-family: 'Kablammo', cursive; */
-
-nav header h1 {padding-left: 50px;
-    padding-top:10px;
-    margin: 0;
-}
-nav header span
 
 body {
     text-align: center;
-    font-family: 'Kablammo', cursive;
+    font-family: "Kablammo", cursive;
 }
 
+#top-nav header h1 {
+paddi
+}
