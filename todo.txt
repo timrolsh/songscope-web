@@ -1,0 +1,24 @@
+- make spotify auth work
+- make google auth work
+- set up database schema
+- set up docker shit to work with db
+- make login with email and password work
+- make profile pictures work
+- plan out ui pages
+- make good ui design
+- make a good readme
+- idea for engagement is on the homepage show recent activity and what people have been doing like rating songs and commenting and replying and what not.
+- for your own account show stuff that is related to you like replies to your comments and likes of your own comments or something like that but compact the other people have liked your post notification because if too many people like it then the event will be too much
+- todo make an app logo at some point
+
+
+
+
+for users to do a log in with spotify and then have their own playlists use this:
+https://developer.spotify.com/documentation/web-api/concepts/authorization
+
+for general spotify api that we will run on the backend for the people who aren't logged in with spotify we will use: https://developer.spotify.com/documentation/web-api/tutorials/getting-started
+
+maybe add functionality to follow other users and view their profiles and message them but this could be like a later on idea
+
+implement thing where if user logs in with spotify then they access everything themselves from the frontend but if they aren't logged in then we (the web server) have to do it for them
