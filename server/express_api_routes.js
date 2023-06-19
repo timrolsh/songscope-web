@@ -1,8 +1,9 @@
 const server = require("./express_config");
 const root_path = require("./root_path");
 const {googleClient} = require("./user_authentication");
+const db = require("./db_connect");
+const crypto = require("crypto");
 // TODO add api endpoints and the code to handle them in this file. if this file gets too complex, refactor it and split it up more
-
 
 /*
 google authentication callback route, google posts back here after it is logged in with jwt which is stored in browser
@@ -18,19 +19,14 @@ server.post("/google-auth", (request, response) => {
         .then((user) => {
             user = user.getPayload();
             response.cookie("token", request.body.credential);
-            db.query("select * from thetutor4u.user where id = $1;", [user.sub]).then((dbResponse) => {
+            db.query("select * from songscope.user where google_auth_id = $1;", [user.sub]).then((dbResponse) => {
                 // if user does not exist in the database, add a new entry for them
                 if (dbResponse.rows.length === 0) {
-                    db.query(
-                        "insert into thetutor4u.user (id, email, username, first_name, last_name, iss) values ($1, $2, $3, $4, $5, $6);",
-                        [user.sub, user.email, crypto.randomUUID(), user.given_name, user.family_name, user.iss]
-                    ).then(() => {
-                        db.query("insert into thetutor4u.language_user (language_code, user_id) values ($1, $2);", [
-                            "en",
-                            user.sub
-                        ]).then(() => {
-                            response.redirect("/");
-                        });
+                    db.query("insert into songscope.user (username, google_auth_id) values ($1, $2);", [
+                        crypto.randomUUID(),
+                        user.sub
+                    ]).then(() => {
+                        response.redirect("/");
                     });
                 } else {
                     response.redirect("/");
@@ -39,5 +35,22 @@ server.post("/google-auth", (request, response) => {
         });
 });
 
+// get user info from google sub provided in token
+server.get("/api/google-user-info", (request, response) => {
+    const google_id = JSON.parse(atob(request.cookies.token.split(".")[1])).sub;
+    db.query("select * from songscope.user where google_auth_id = $1;", [google_id]).then((dbResponse) => {
+        response.send(dbResponse.rows[0]);
+    });
+});
+
+server.post("/api/change-username", (request, response) => {
+    const google_id = JSON.parse(atob(request.cookies.token.split(".")[1])).sub;
+    db.query("update songscope.user set username = $1 where google_auth_id = $2;", [
+        request.body.username,
+        google_id
+    ]).then(() => {
+        response.send("OK");
+    });
+});
 
 module.exports = server;

@@ -18,4 +18,7 @@ server.use(express.json());
 // cookie parser
 server.use(cookieParser());
 
+// logger
+server.use(require("morgan")("dev"));
+
 module.exports = server;

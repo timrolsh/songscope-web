@@ -9,6 +9,6 @@
         "pg": "^8.11.0"
     },
     "scripts": {
-        "start": "node server/start_server_simple.js"
+        "start": "node server/start_server.js"
     }
 }

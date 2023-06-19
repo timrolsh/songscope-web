@@ -1,8 +1,8 @@
 const {OAuth2Client} = require("google-auth-library");
 const googleClient = new OAuth2Client(process.env.CLIENT_ID);
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 const rootPath = require("./root_path");
-const publicKey = require("fs").readFileSync(`${rootPath}/authentication/jwtRS256.key.pub`);
+// const publicKey = require("fs").readFileSync(`${rootPath}/authentication/jwtRS256.key.pub`);
 
 /*
 Rreturns true if the token has not expired yet, and return false if the token has expired and is no longer valid. 
