@@ -1,3 +1,13 @@
 img {
     width: 250px;
 }
+
+#rate_grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    width: 100%;
+}
+
+#red_button {
+    background-color: red;
+}

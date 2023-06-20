@@ -97,6 +97,31 @@ server.post("/api/song-info", (request, response) => {
     // the song info we need average rating, then we need the comments with their replies and the amount of likes that each comment has
 });
 
+server.post("/api/user-song-rating", (request, response) => {
+    const google_id = JSON.parse(atob(request.cookies.token.split(".")[1])).sub;
+    db.query("select value from songscope.rating where user_id = 7 and song_id = $1;", [
+        request.body.song_id
+    ]).then(({rows}) => {
+        let final_object = {rating: null};
+        if (rows.length === 0) {
+            final_object.rating = -1;
+        } else {
+            final_object.rating = rows[0].value;
+        }
+        response.send(final_object);
+    });
+});
+
+server.post("/api/update-user-song-rating", (request, response) => {
+    // this wont work if there is no rating
+    db.query(
+        "update songscope.rating set value = $1 where user_id = 7 and song_id = $2; select avg(value) as average_rating from songscope.rating where song_id = $2;",
+        [request.body.new_rating, request.body.song_id]
+    ).then(({rows}) => {
+        response.send(rows[0].average_rating);
+    });
+});
+
 // TODO REMOVE THIS AFTER CS FAIR IT IS VERY BAD PRACTICE AND IS A HOTFIX
 server.get("/api/get-all-users", (_, response) => {
     db.query("select id, username from songscope.user;").then(({rows}) => {
