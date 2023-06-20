@@ -53,4 +53,60 @@ server.post("/api/change-username", (request, response) => {
     });
 });
 
+function findComment(final_object, comment_id) {
+    for (let a = 0; a < final_object.comments.length; ++a) {
+        let comment = final_object.comments[a];
+        if (comment.id === comment_id) {
+            return comment;
+        }
+    }
+}
+/*
+{
+    comment_id: null,
+    comment_text: null,
+    comment_username: null,
+    comment_replies: []
+}
+*/
+server.post("/api/song-info", (request, response) => {
+    let final_object = {
+        average_rating: null,
+        comments: []
+    };
+    db.query("select avg(value) as average_rating from songscope.rating where song_id = $1;", [
+        request.body.song_id
+    ]).then(({rows}) => {
+        final_object.average_rating = Math.round(rows[0].average_rating);
+        db.query("select * from songscope.comment where song_id = $1;", [request.body.song_id]).then(({rows}) => {
+            final_object.comments = rows;
+            // add replies property to every comment
+            for (let a = 0; a < final_object.comments.length; ++a) {
+                final_object.comments[a].replies = [];
+            }
+            db.query("select * from songscope.reply where song_id = $1;", [request.body.song_id]).then(({rows}) => {
+                for (let a = 0; a < rows.length; ++a) {
+                    let row = rows[a];
+                    let comment = findComment(final_object, row.comment_id);
+                    comment.replies.push(row);
+                }
+                response.send(final_object);
+            });
+        });
+    });
+    // the song info we need average rating, then we need the comments with their replies and the amount of likes that each comment has
+});
+
+// TODO REMOVE THIS AFTER CS FAIR IT IS VERY BAD PRACTICE AND IS A HOTFIX
+server.get("/api/get-all-users", (_, response) => {
+    db.query("select id, username from songscope.user;").then(({rows}) => {
+        let final_object = {};
+        for (let a = 0; a < rows.length; ++a) {
+            let row = rows[a];
+            final_object[row.id] = row.username;
+        }
+        response.send(final_object);
+    });
+});
+
 module.exports = server;

@@ -24,11 +24,23 @@ function setupRoutes(access_token) {
                 Authorization: `Bearer ${access_token}`
             }
         })
-            .then((fetchSearch) => fetchSearch.json())
-            .then((searchJSON) => {
-                console.log("made it here");
+            .then((_) => _.json())
+            .then((_) => {
                 // Handle the response data here
-                response.send(searchJSON);
+                response.send(_);
+            });
+    });
+
+    server.post("/api/spotify/song-info", (request, response) => {
+        fetch(`https://api.spotify.com/v1/tracks/${request.body.song_id}`, {
+            headers: {
+                Authorization: `Bearer ${access_token}`
+            }
+        })
+            .then((_) => _.json())
+            .then((_) => {
+                // Handle the response data here
+                response.send(_);
             });
     });
 }

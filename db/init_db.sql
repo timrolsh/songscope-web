@@ -23,9 +23,11 @@ create table songscope."comment"
             references songscope."user",
     song_id text    not null,
     comment text    not null
+-- TODO it would probably be best to add timestamps to comments and then order them by the least recent to most recent or something like that
 );
 
 -- table of all Songscope likes. Every lake is made by one user on one comment.
+-- TODO likes only point to comments and not comment replies so replies can't actually get likes on them as of right now fix later
 create table songscope."like"
 (
     user_id    integer not null
@@ -48,7 +50,8 @@ create table songscope."reply"
     comment_id integer not null
         constraint reply_comment_id_fk
             references songscope.comment,
-    comment    text    not null
+    comment    text    not null,
+    song_id    text    not null
 );
 
 -- table of all Songscope ratings. Every rating is made by one user on one song. A user's rating can change
@@ -60,7 +63,6 @@ create table songscope."rating"
     song_id text    not null,
     value   integer not null
 );
-
 
 
 -- TODO possibly add a table of events at some point
